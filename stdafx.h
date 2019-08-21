@@ -13,7 +13,6 @@
 #include <errno.h>
 #include <libnetfilter_queue/libnetfilter_queue.h>
 
-using namespace std;
 #include <vector>
 
 #include <libnet.h>
@@ -23,5 +22,7 @@ using namespace std;
 #include "libnet-macros.h"
 #include "libnet-structures.h"
 #include "libnet-types.h"
+
+using namespace std;
 
 #endif

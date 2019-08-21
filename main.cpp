@@ -2,11 +2,11 @@
 
 #define HW_MAX_LEN 1
 
-bool is_harmful = false;
+static bool is_harmful = false;
 
-vector<char*> harmful_website;
+static vector<char*> harmful_website;
 
-void dump(unsigned char* buf, int size) {
+static void dump(unsigned char* buf, int size) {
     int i;
     for (i = 0; i < size; i++) {
         if (i % 16 == 0)
@@ -15,7 +15,7 @@ void dump(unsigned char* buf, int size) {
     }
 }
 
-uint8_t check_Port(u_char* Packet_DATA){
+static uint8_t check_Port(u_char* Packet_DATA){
     struct libnet_tcp_hdr* TH = (struct libnet_tcp_hdr*)(Packet_DATA);
     // TCP data offset check
     if(TH->th_off < 4) return false;
@@ -29,7 +29,7 @@ uint8_t check_Port(u_char* Packet_DATA){
     return 0;
 }
 
-bool is_Harmful_Web(char* dns){
+static bool is_Harmful_Web(char* dns){
     for(int i = 0; i < HW_MAX_LEN; i++){
         if(!strncmp(dns, harmful_website.at(i), strlen(dns))){
             printf("[ Success to Drop packets of %s ]\n", dns);
@@ -89,14 +89,18 @@ static u_int32_t print_pkt (struct nfq_data *tb)
     int is_80 = 0; is_harmful = false;
     printf("[ Start parsing packet ]\n");
     printf("[ Total packet size : %d ]\n", ret);
-    for (int i = 0; i < ret; i++) {
+    for (int i = 20; i < ret; i++) {
+        // check port 80
         if(i == 20){
             data += 20;
             is_80 = check_Port(data);
             if(is_80 == 0){ printf("{ Destination port is not 80 }\n"); break; }
-            printf("[ TCP header size : %d ]\n", is_80);
-            data -= 20;
+            else{
+                printf("[ TCP header size : %d ]\n", is_80);
+                data -= 20;
+            }
         }
+        // check request
         if(i == (is_80 + 20)){ //printf("[ HTTP ]\n");
             char first = (char)(data[i]);
             //printf("first : %c\n", first);
@@ -126,7 +130,7 @@ static u_int32_t print_pkt (struct nfq_data *tb)
                     }
                 }
                 buff = (char*)realloc(buff, a);
-                printf("[ HOST : %s ]\n", buff);
+                if(buff != NULL){ printf("[ HOST : %s ]\n", buff); }
                 is_harmful = is_Harmful_Web(buff);
                 free(buff);
                 break;
