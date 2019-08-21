@@ -1,9 +1,7 @@
 #include "stdafx.h"
 
-#define HW_MAX_LEN 1
-
+static int HW_MAX_LEN = 0;
 static bool is_harmful = false;
-
 static vector<char*> harmful_website;
 
 static void dump(unsigned char* buf, int size) {
@@ -169,9 +167,14 @@ int main(int argc, char **argv)
     char buf[4096] __attribute__ ((aligned));
 
     // Add harmful websites
-    // You have to set the variable, HW_MAX_LEN
-    // The value of Current HW_MAX_LEN is 1
-    harmful_website.push_back("test.gilgil.net");
+    if(argc <= 1){ printf("{ Usage : sudo ./NFQNL <Host name> }\n"); exit(0); }
+    for(int i = 1; i < argc; i++){
+        harmful_website.push_back(argv[i]);
+        HW_MAX_LEN++;
+    }
+    for(int j = 0; j < HW_MAX_LEN; j++){
+        printf("[ Stored Host : %s ]\n", harmful_website.at(j));
+    }
 
     printf("[ opening library handle ]\n");
     h = nfq_open();

@@ -15,3 +15,4 @@ HEADERS += \
     libnet-types.h
 
 LIBS += -lnetfilter_queue
+LIBS += -lnfnetlink
