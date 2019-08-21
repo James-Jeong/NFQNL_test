@@ -5,7 +5,7 @@
 2. iptables -A OUTPUT -p tcp --dport 80 -j NFQUEUE --queue-num 0
 3. qmake
 4. make
-5. sudo ./NFQNL
+5. sudo ./NFQNL test.gilgil.net
 
 # Environment
 1. Ubuntu 18.04
