@@ -155,6 +155,7 @@ static int cb(struct nfq_q_handle *qh, struct nfgenmsg *nfmsg,
     if(is_harmful == false){ return nfq_set_verdict(qh, id, NF_ACCEPT, 0, NULL); }
     // drop rules
     else if(is_harmful == true){ return nfq_set_verdict(qh, id, NF_DROP, 0, NULL); }
+    // return nfq_set_verdict(qh, id, is_harmful ? NF_ACCEPT : NF_DROP, 0, NULL);
 }
 
 int main(int argc, char **argv)
