@@ -198,6 +198,7 @@ int main(int argc, char **argv)
 
     printf("[ binding this socket to queue '0' ]\n");
     qh = nfq_create_queue(h,  0, &cb, NULL);
+    // NULL -> callback 함수의 parameter pointer -> class pointer 변수를 넘길 수 있음 -> callback  강제 형변환해서 사용 가능
     if (!qh) {
         fprintf(stderr, "{ error during nfq_create_queue() }\n");
         exit(1);
